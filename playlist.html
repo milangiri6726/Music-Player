@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101018">
+  <title>Aural — Playlist</title>
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <script src="music-library.js" defer></script>
+  <script src="audio-compatibility.js" defer></script>
+  <script src="ringtone-store.js" defer></script>
+  <script src="background-customizer.js" defer></script>
+  <script src="playlist.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="index.html" aria-label="Aural home">
+        <span class="brand-mark" aria-hidden="true">a</span>
+        <span>aural</span>
+      </a>
+      <nav class="page-nav" aria-label="Main navigation">
+        <a class="page-nav-link" href="index.html">Player</a>
+        <a class="page-nav-link" href="playlist.html" id="nav-playlist" aria-current="page">Playlist</a>
+        <a class="page-nav-link" href="playlist.html?view=all" id="nav-all-songs">All Songs</a>
+      </nav>
+      <span class="topbar-caption">YOUR PERSONAL SOUNDSPACE</span>
+      <div class="topbar-actions">
+        <button class="icon-button background-button" id="background-picker" type="button" aria-label="Choose a custom background" title="Choose a custom background">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9" r="1.5"/><path d="m21 15-5-5L5 20"/></svg>
+        </button>
+        <input class="visually-hidden" id="background-image-input" type="file" accept="image/*" tabindex="-1" aria-hidden="true">
+        <button class="icon-button background-reset" id="background-reset" type="button" aria-label="Restore default background" title="Restore default background" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+        <button class="icon-button theme-button" id="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle color theme">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.1 15.4A8.5 8.5 0 0 1 8.6 3.9 8.5 8.5 0 1 0 20.1 15.4Z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="library-page glass-card" aria-labelledby="library-title">
+      <div class="library-heading">
+        <div>
+          <p class="section-kicker">YOUR LIBRARY</p>
+          <h1 id="library-title">Your playlists</h1>
+          <p class="library-subtitle">Make a collection for every mood.</p>
+        </div>
+        <label class="add-button" for="add-songs">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          <span>Add music</span>
+          <input id="add-songs" type="file" accept="audio/*" multiple>
+        </label>
+      </div>
+
+      <div class="playlist-workspace">
+        <aside class="playlist-browser" aria-label="Your playlists">
+          <div class="playlist-browser-heading">
+            <span class="section-kicker">MY PLAYLISTS</span>
+            <button class="icon-button create-playlist-button" id="create-playlist" type="button" aria-label="Create a new playlist" title="Create a new playlist">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+          </div>
+          <button class="playlist-nav-button all-songs-button" id="all-songs" type="button" aria-current="false">
+            <span class="playlist-nav-icon" aria-hidden="true">♫</span>
+            <span class="playlist-nav-copy"><span class="playlist-nav-name">All Songs</span></span>
+            <span class="playlist-nav-count" id="all-songs-count">0</span>
+          </button>
+          <ul class="playlist-nav-list" id="playlist-nav"></ul>
+        </aside>
+
+        <div class="playlist-content">
+          <div class="library-now-playing" aria-label="Selected track">
+            <img id="library-cover" src="" alt="">
+            <div class="library-now-copy">
+              <span class="section-kicker">NOW PLAYING</span>
+              <strong id="library-title-now">Neon Drift</strong>
+              <span id="library-artist-now">SoundHelix</span>
+            </div>
+            <button class="play-button library-play-button" id="library-play" type="button" aria-label="Play" title="Play or pause (Space)">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path id="library-play-icon" d="M8 5v14l11-7z"/></svg>
+            </button>
+          </div>
+
+          <div class="playlist-title-row">
+            <div>
+              <h2 id="selected-playlist-name">My Playlist</h2>
+              <span class="track-count" id="selected-playlist-count">4 tracks</span>
+            </div>
+            <button class="add-button add-tracks-button" id="add-tracks" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              <span>Add tracks</span>
+            </button>
+            <div class="sort-control" id="all-songs-sort-control">
+              <span class="sort-label">SORT BY</span>
+              <div class="sort-picker">
+                <button class="sort-trigger" id="sort-trigger" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="sort-menu">
+                  <svg class="sort-trigger-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M4 12h6M4 17h3M17 5v14m-4-3 4 3 4-3"/></svg>
+                  <span id="sort-current-label">Normal order</span>
+                  <svg class="sort-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+                </button>
+                <div class="sort-menu" id="sort-menu" role="menu" aria-label="Sort songs" hidden>
+                  <span class="sort-menu-heading">Arrange your music</span>
+                  <button class="sort-option" type="button" role="menuitemradio" aria-checked="false" data-sort-order="default">
+                    <span class="sort-option-copy"><strong>Normal order</strong><small>Keep the playlist order</small></span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                  </button>
+                  <button class="sort-option" type="button" role="menuitemradio" aria-checked="false" data-sort-order="alphabetical">
+                    <span class="sort-option-copy"><strong>Alphabetical</strong><small>Sort titles from A to Z</small></span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                  </button>
+                  <button class="sort-option" type="button" role="menuitemradio" aria-checked="false" data-sort-order="duration">
+                    <span class="sort-option-copy"><strong>Song duration</strong><small>Shortest tracks first</small></span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                  </button>
+                  <button class="sort-option" type="button" role="menuitemradio" aria-checked="false" data-sort-order="random">
+                    <span class="sort-option-copy"><strong>Random order</strong><small>Shuffle the track list</small></span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                  </button>
+                  <button class="sort-option" type="button" role="menuitemradio" aria-checked="false" data-sort-order="added">
+                    <span class="sort-option-copy"><strong>Download order</strong><small>Newest additions first</small></span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="library-search-row" role="search">
+            <label class="library-search" for="library-search-input">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+              <input id="library-search-input" type="search" placeholder="Search songs or artists" autocomplete="off" aria-label="Search this collection">
+              <kbd>/</kbd>
+            </label>
+            <button class="search-clear" id="library-search-clear" type="button" aria-label="Clear search" title="Clear search" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+            </button>
+            <span class="search-results-count" id="library-search-count" aria-live="polite"></span>
+          </div>
+
+          <div class="library-list-heading" aria-hidden="true">
+            <span>#</span>
+            <span>TITLE</span>
+            <span>DURATION</span>
+          </div>
+          <ul class="playlist library-track-list" id="library-tracks" aria-label="Tracks in selected playlist"></ul>
+        </div>
+      </div>
+      <p class="status-message library-status" id="library-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <footer class="footer-note">MADE FOR THE MOMENTS BETWEEN</footer>
+  </main>
+  <audio id="library-audio" preload="metadata"></audio>
+  <div class="background-toast" id="background-toast" role="status" aria-live="polite" hidden></div>
+  <dialog class="playlist-dialog" id="create-playlist-dialog" aria-labelledby="create-playlist-title">
+    <form id="create-playlist-form">
+      <p class="section-kicker">NEW COLLECTION</p>
+      <h2 id="create-playlist-title">Create a playlist</h2>
+      <label class="dialog-label" for="new-playlist-name">Playlist name</label>
+      <input class="dialog-input" id="new-playlist-name" name="name" type="text" maxlength="40" placeholder="e.g. Late night" required>
+      <p class="dialog-error" id="create-playlist-error" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button class="dialog-button secondary" type="button" data-close-dialog>Cancel</button>
+        <button class="dialog-button primary" type="submit">Create playlist</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="playlist-dialog" id="rename-playlist-dialog" aria-labelledby="rename-playlist-title">
+    <form id="rename-playlist-form">
+      <p class="section-kicker">PLAYLIST OPTIONS</p>
+      <h2 id="rename-playlist-title">Rename playlist</h2>
+      <label class="dialog-label" for="rename-playlist-name">Playlist name</label>
+      <input class="dialog-input" id="rename-playlist-name" name="name" type="text" maxlength="40" required>
+      <p class="dialog-error" id="rename-playlist-error" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button class="dialog-button secondary" type="button" data-close-dialog>Cancel</button>
+        <button class="dialog-button primary" type="submit">Save name</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="playlist-dialog add-tracks-dialog" id="add-tracks-dialog" aria-labelledby="add-tracks-title">
+    <form id="add-tracks-form">
+      <p class="section-kicker">YOUR MUSIC</p>
+      <h2 id="add-tracks-title">Add tracks</h2>
+      <p class="dialog-description">Choose the songs to include in this playlist.</p>
+      <ul class="available-tracks" id="available-tracks"></ul>
+      <div class="dialog-actions">
+        <button class="dialog-button secondary" type="button" data-close-dialog>Cancel</button>
+        <button class="dialog-button primary" type="submit">Save tracks</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>
